@@ -2,7 +2,7 @@
   display: none;
   padding: 1rem 2rem;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1rem;
   justify-content: space-between;
   align-items: center;
   background-color: var(--dark-blue);
@@ -36,8 +36,8 @@
 .listItem a {
   cursor: pointer;
   color: var(--white);
-  font-weight: 500;
-  font-size: 14px;
+  font-weight: 600;
+  font-size: 16px;
   text-decoration: none;
   text-transform: uppercase;
   transition: color 0.3s ease;
@@ -49,8 +49,7 @@
 
 .btnDashboard {
   background-color: var(--yellow);
-  border-color: var(--yellow);
-  border-radius: 3px;
+  border: 1px solid var(--dark-yellow);
   color: var(--white);
   cursor: pointer;
   font-size: 1rem;
