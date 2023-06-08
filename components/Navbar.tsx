@@ -61,7 +61,7 @@ export const Navbar = () => {
 				</ul>
 			</nav>
 
-			<nav className={styles.navbarPhone}>
+			<nav className={styles.navbarPhone} style={style}>
 				<ul>
 					<li>
 						<Link href='/'>

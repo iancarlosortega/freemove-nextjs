@@ -66,3 +66,26 @@
   background-color: var(--dark-yellow);
   border-color: var(--dark-yellow);
 }
+
+/* Navbar Phone */
+
+.navbarPhone ul {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  list-style: none;
+}
+
+.navbarPhone button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  color: white;
+}
+
+@media (min-width: 768px){
+  .navbarPhone {
+    display: none;
+  }
+}
