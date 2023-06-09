@@ -1,0 +1,147 @@
+.loginContainer {
+  background-color: #f1f1f1;
+  height: 100%;
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.loginCard {
+  margin: 1.5rem 0;
+  width: 30rem;
+  max-width: 90%;
+  background-color: var(--white);
+  padding: 2rem;
+  border-radius: 5px;
+  border: 1px solid #F1F1F1;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.15);
+}
+
+@media (min-width:768px) {
+  .loginCard {
+    padding: 2.5rem 3rem;
+  }
+}
+
+.loginLogo {
+  cursor: pointer;
+  margin-bottom: 1rem;
+}
+
+.loginForm {
+  display: flex;
+  flex-direction: column;
+}
+
+.loginButton {
+  background-color: var(--yellow);
+  color: var(--white);
+  border: none;
+  border-radius: 5px;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.loginButton:hover {
+  background-color: var(--dark-yellow);
+}
+
+.divider {
+  margin: 1rem 0;
+  display: grid;
+  place-items: center;
+  grid-template-columns: 45% 10% 45%;
+
+}
+
+.divider hr {
+  border: none;
+  background-color: #c7c5c5;
+  height: 1px;
+  width: 100%;
+}
+
+.mid {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.mid p {
+  margin: 0;
+  color: #47474793;
+  font-weight: 300;
+}
+
+.buttonOauth {
+  width: 100%;
+  margin: 0.5rem 0;
+  height: 40px;
+  border-radius: 7px;
+  border: 1px solid #d0d0d0;
+  background-color: #ffffff;
+  font-size: 15px;
+  color: #6a6a6a;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.buttonOauth:hover {
+  background-color: #f5f5f5;
+}
+
+.loginFooter {
+  margin: 1rem 0;
+  font-size: 0.9rem;
+  text-align: center;
+  color: #757575;
+}
+
+.loginFooter p {
+  margin: 0;
+}
+
+.register {
+  color: #757575;
+  transition: color 0.2s ease-in-out;
+}
+
+.register:hover {
+  color: #474747;
+}
+
+.forgotPassword {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1rem;
+}
+
+.forgotPassword a {
+  font-size: 0.9rem;
+  color: #757575;
+  transition: color 0.2s ease-in-out;
+}
+
+.forgotPassword a:hover {
+  color: #474747;
+}
+
+.remember {
+  font-size: 0.9rem;
+  color: #757575;
+}
+
+.remember label {
+  margin-left: 0.25rem;
+}
+
+.remember input {
+  accent-color: #4e905a;
+}

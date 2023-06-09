@@ -7,9 +7,24 @@ const poppins = Poppins({
 });
 
 export const theme = createTheme({
+	palette: {
+		primary: {
+			main: '#F2AC20',
+		},
+	},
 	typography: {
 		allVariants: {
 			fontFamily: poppins.style.fontFamily,
+		},
+	},
+	components: {
+		MuiButton: {
+			styleOverrides: {
+				root: {
+					textTransform: 'none',
+					fontWeight: 400,
+				},
+			},
 		},
 	},
 });
