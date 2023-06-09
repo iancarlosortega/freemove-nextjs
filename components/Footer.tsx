@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import styles from './Footer.module.css';
+import { LogoGray, LogoSmartland, LogoUtpl } from './icons';
 
 export const Footer = () => {
 	const year = new Date().getFullYear();
@@ -10,30 +11,15 @@ export const Footer = () => {
 				<div className={styles.footerLogos}>
 					<div>
 						<Link href='/'>
-							<Image
-								src='/assets/logo-gray.png'
-								width={300}
-								height={200}
-								alt='FreeMove Logo'
-							/>
+							<LogoGray />
 						</Link>
 					</div>
 					<div>
-						<Image
-							width={200}
-							height={90}
-							src='/assets/logo-smartland.png'
-							alt='SmartLand Logo'
-						/>
+						<LogoSmartland />
 					</div>
 
 					<div>
-						<Image
-							width={200}
-							height={90}
-							src='/assets/logo-utpl.png'
-							alt='UTPL Logo'
-						/>
+						<LogoUtpl />
 					</div>
 				</div>
 				<div className={styles.footerTexts}>

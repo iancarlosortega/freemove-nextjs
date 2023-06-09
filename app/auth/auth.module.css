@@ -35,22 +35,6 @@
   flex-direction: column;
 }
 
-.authButton {
-  margin-top: 1.5rem;
-  background-color: var(--yellow);
-  color: var(--white);
-  border: none;
-  border-radius: 5px;
-  padding: 0.5rem 1rem;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background-color 0.2s ease-in-out;
-}
-
-.authButton:hover {
-  background-color: var(--dark-yellow);
-}
-
 .divider {
   margin: 1rem 0;
   display: grid;

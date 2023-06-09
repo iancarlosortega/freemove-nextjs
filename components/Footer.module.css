@@ -7,6 +7,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  align-items: center;
   padding: 4rem;
   gap: 2rem;
 }
@@ -28,14 +29,13 @@
   }
 }
 
-.footerLogos img {
-  height: 4rem;
-  object-fit: contain;
+.footerLogos svg {
+  width: 15rem;
 }
 
-@media (min-width: 1280px) {
-  .footerLogos img {
-    height: 6rem;
+@media (min-width: 992px){
+  .footerLogos svg {
+    width: 20rem;
   }
 }
 

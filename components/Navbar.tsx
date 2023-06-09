@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import {
 	Drawer,
@@ -19,6 +18,7 @@ import {
 	MiscellaneousServices,
 	AccountTree,
 } from '@mui/icons-material';
+import { LogoGreen, LogoWhite } from './icons';
 import styles from './Navbar.module.css';
 
 export const Navbar = () => {
@@ -33,12 +33,7 @@ export const Navbar = () => {
 		<>
 			<nav className={styles.navbar} style={style}>
 				<Link href='/'>
-					<Image
-						src='/assets/logo-white.png'
-						width={300}
-						height={90}
-						alt='FreeMove Logo'
-					/>
+					<LogoWhite />
 				</Link>
 				<ul className={styles.list}>
 					<li className={styles.listItem}>
@@ -65,12 +60,7 @@ export const Navbar = () => {
 				<ul>
 					<li>
 						<Link href='/'>
-							<Image
-								src='/assets/logo-white.png'
-								width={170}
-								height={120}
-								alt='FreeMove Logo'
-							/>
+							<LogoWhite />
 						</Link>
 					</li>
 					<li>
@@ -81,7 +71,7 @@ export const Navbar = () => {
 				</ul>
 			</nav>
 			<Drawer
-				onBackdropClick={() => setIsMenuOpen(false)}
+				onClose={() => setIsMenuOpen(false)}
 				open={isMenuOpen}
 				anchor='left'
 				sx={{
@@ -91,12 +81,7 @@ export const Navbar = () => {
 				<List>
 					<ListItem>
 						<Link href='/'>
-							<Image
-								src='/assets/logo-v2.png'
-								width={200}
-								height={90}
-								alt='FreeMove Logo'
-							/>
+							<LogoGreen />
 						</Link>
 					</ListItem>
 					<ListItem>

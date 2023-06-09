@@ -43,7 +43,6 @@ export default function RegisterPage() {
 						label='Nombres y Apellidos'
 						placeholder='Juan Pérez'
 						variant='outlined'
-						autoFocus
 						helperText={errors.name?.message?.toString()}
 						sx={{
 							my: 1,
@@ -112,7 +111,7 @@ export default function RegisterPage() {
 									: '',
 						})}
 					/>
-					<Button type='submit' className={styles.authButton}>
+					<Button type='submit' variant='primary'>
 						Registrarse
 					</Button>
 					<footer className={styles.authFooter}>

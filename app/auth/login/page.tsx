@@ -48,7 +48,6 @@ export default function LoginPage() {
 						label='Correo Electrónico'
 						placeholder='example@gmail.com'
 						variant='outlined'
-						autoFocus
 						helperText={errors.email?.message?.toString()}
 						sx={{
 							my: 1,
@@ -100,7 +99,7 @@ export default function LoginPage() {
 							¿Olvidaste tu contraseña?
 						</Link>
 					</div>
-					<Button type='submit' className={styles.authButton}>
+					<Button type='submit' variant='primary'>
 						Iniciar Sesión
 					</Button>
 					<div className={styles.divider}>
@@ -111,11 +110,11 @@ export default function LoginPage() {
 						<hr />
 					</div>
 				</form>
-				<Button className={styles.buttonOauth}>
+				<Button fullWidth variant='oauth'>
 					<GoogleIcon />
 					Continuar con Google
 				</Button>
-				<Button className={styles.buttonOauth}>
+				<Button fullWidth variant='oauth'>
 					<FacebookIcon />
 					Continuar con Facebook
 				</Button>

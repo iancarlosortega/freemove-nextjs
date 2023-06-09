@@ -1,12 +1,13 @@
-import { Footer, Navbar } from '@/components';
-import styles from './page.module.css';
 import Image from 'next/image';
+import { Footer, Navbar } from '@/components';
+import { Logo } from '@/components/icons';
+import styles from './page.module.css';
 
 const sliderPhotos = [
-	'assets/slider/slider-1',
-	'assets/slider/slider-2',
-	'assets/slider/slider-3',
-	'assets/slider/slider-4',
+	'/assets/slider/slider-1.webp',
+	'/assets/slider/slider-2.webp',
+	'/assets/slider/slider-3.webp',
+	'/assets/slider/slider-4.webp',
 ];
 
 export default function Home() {
@@ -17,18 +18,23 @@ export default function Home() {
 				<div className={styles.headerSlider}>
 					<div className={styles.headerWrapper}>
 						{sliderPhotos.map((photo, index) => (
-							<picture key={index}>
-								<source type='image/webp' srcSet={`${photo}.webp`} />
-								<img src={`${photo}.jpg`} alt='Slider images' />
-							</picture>
+							<Image
+								key={index}
+								src={photo}
+								alt='Slider images'
+								width={1920}
+								height={1080}
+							/>
 						))}
 					</div>
 				</div>
 				<div className={styles.headerLogo}>
-					<picture>
-						<source type='image/webp' srcSet='assets/home/logo-header.webp' />
-						<img src='assets/home/logo-header.png' alt='FreeMove' />
-					</picture>
+					<Image
+						src='/assets/home/logo-header.webp'
+						alt='Slider images'
+						width={500}
+						height={500}
+					/>
 				</div>
 			</main>
 
@@ -42,7 +48,7 @@ export default function Home() {
 						<p>400</p>
 						<div className={styles.cardImg}>
 							<Image
-								src='assets/home/rutas-icon.svg'
+								src='/assets/home/rutas-icon.svg'
 								alt='Rutas'
 								width={90}
 								height={90}
@@ -54,7 +60,7 @@ export default function Home() {
 						<p>200</p>
 						<div className={styles.cardImg}>
 							<Image
-								src='assets/home/ciclistas-icon.svg'
+								src='/assets/home/ciclistas-icon.svg'
 								alt='Ciclistas'
 								width={90}
 								height={90}
@@ -66,7 +72,7 @@ export default function Home() {
 						<p>50</p>
 						<div className={styles.cardImg}>
 							<Image
-								src='assets/home/incidentes-icon.svg'
+								src='/assets/home/incidentes-icon.svg'
 								alt='Incidentes'
 								width={90}
 								height={90}
@@ -78,26 +84,17 @@ export default function Home() {
 			</section>
 
 			<section className={styles.healthInformation} id='salud'>
-				<picture>
-					<source
-						className={styles.healthBackground}
-						type='image/webp'
-						srcSet='assets/home/salud-fondo.webp'
-					/>
-					<img
-						className={styles.healthBackground}
-						src='assets/home/salud-fondo.png'
-						alt='Salud'
-						loading='lazy'
-					/>
-				</picture>
+				<Image
+					className={styles.healthBackground}
+					src='/assets/home/salud-fondo.webp'
+					alt='Incidentes'
+					width={1920}
+					height={500}
+				/>
 				<div className={styles.healthBackgroundContainer}>
 					<div className={styles.healthContainer}>
 						<div className={styles.healthImg}>
-							<picture>
-								<source type='image/webp' srcSet='assets/logo.webp' />
-								<img src='assets/logo.png' alt='FreMove logo' loading='lazy' />
-							</picture>
+							<Logo />
 						</div>
 						<div className={styles.healthText}>
 							<h3>Salud</h3>
