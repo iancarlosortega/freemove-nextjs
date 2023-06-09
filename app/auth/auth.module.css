@@ -1,4 +1,4 @@
-.loginContainer {
+.authContainer {
   background-color: #f1f1f1;
   height: 100%;
   min-height: 100vh;
@@ -8,7 +8,7 @@
   align-items: center;
 }
 
-.loginCard {
+.authCard {
   margin: 1.5rem 0;
   width: 30rem;
   max-width: 90%;
@@ -20,22 +20,23 @@
 }
 
 @media (min-width:768px) {
-  .loginCard {
+  .authCard {
     padding: 2.5rem 3rem;
   }
 }
 
-.loginLogo {
+.authLogo {
   cursor: pointer;
   margin-bottom: 1rem;
 }
 
-.loginForm {
+.authForm {
   display: flex;
   flex-direction: column;
 }
 
-.loginButton {
+.authButton {
+  margin-top: 1.5rem;
   background-color: var(--yellow);
   color: var(--white);
   border: none;
@@ -46,7 +47,7 @@
   transition: background-color 0.2s ease-in-out;
 }
 
-.loginButton:hover {
+.authButton:hover {
   background-color: var(--dark-yellow);
 }
 
@@ -97,14 +98,14 @@
   background-color: #f5f5f5;
 }
 
-.loginFooter {
+.authFooter {
   margin: 1rem 0;
   font-size: 0.9rem;
   text-align: center;
   color: #757575;
 }
 
-.loginFooter p {
+.authFooter p {
   margin: 0;
 }
 
@@ -120,7 +121,6 @@
 .forgotPassword {
   display: flex;
   justify-content: flex-end;
-  margin-bottom: 1rem;
 }
 
 .forgotPassword a {

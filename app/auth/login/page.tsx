@@ -7,7 +7,7 @@ import { useForm } from 'react-hook-form';
 import { Button, IconButton, InputAdornment, TextField } from '@mui/material';
 import { VisibilityOff, Visibility } from '@mui/icons-material';
 import { FacebookIcon, GoogleIcon } from '@/components/icons';
-import styles from './page.module.css';
+import styles from '../auth.module.css';
 
 export default function LoginPage() {
 	const [showPassword, setShowPassword] = useState(false);
@@ -20,10 +20,10 @@ export default function LoginPage() {
 	const onSubmit = (data: any) => console.log(data);
 
 	return (
-		<div className={styles.loginContainer}>
-			<div className={styles.loginCard}>
+		<div className={styles.authContainer}>
+			<div className={styles.authCard}>
 				<header>
-					<Link className={styles.loginLogo} href='/'>
+					<Link className={styles.authLogo} href='/'>
 						<Image
 							width={200}
 							height={200}
@@ -40,15 +40,15 @@ export default function LoginPage() {
 				</header>
 				<form
 					autoComplete='off'
-					className={styles.loginForm}
+					className={styles.authForm}
 					onSubmit={handleSubmit(onSubmit)}>
 					<TextField
 						error={Boolean(errors['email']?.message)}
-						required
 						type='email'
 						label='Correo Electrónico'
 						placeholder='example@gmail.com'
 						variant='outlined'
+						autoFocus
 						helperText={errors.email?.message?.toString()}
 						sx={{
 							my: 1,
@@ -61,10 +61,8 @@ export default function LoginPage() {
 							},
 						})}
 					/>
-
 					<TextField
 						error={Boolean(errors['password']?.message)}
-						required
 						type={showPassword ? 'text' : 'password'}
 						label='Contraseña'
 						placeholder='********'
@@ -93,7 +91,6 @@ export default function LoginPage() {
 							),
 						}}
 					/>
-
 					<div className={styles.remember}>
 						<input type='checkbox' id='remember' />
 						<label htmlFor='remember'>Recordarme</label>
@@ -103,11 +100,9 @@ export default function LoginPage() {
 							¿Olvidaste tu contraseña?
 						</Link>
 					</div>
-
-					<Button type='submit' className={styles.loginButton}>
+					<Button type='submit' className={styles.authButton}>
 						Iniciar Sesión
 					</Button>
-
 					<div className={styles.divider}>
 						<hr />
 						<div className={styles.mid}>
@@ -124,9 +119,9 @@ export default function LoginPage() {
 					<FacebookIcon />
 					Continuar con Facebook
 				</Button>
-				<footer className={styles.loginFooter}>
+				<footer className={styles.authFooter}>
 					<p>¿No tienes una cuenta?</p>
-					<Link className={styles.register} href='/register'>
+					<Link className={styles.register} href='/auth/register'>
 						Regístrate aquí
 					</Link>
 				</footer>
