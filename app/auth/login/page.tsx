@@ -1,22 +1,34 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { Button, IconButton, InputAdornment, TextField } from '@mui/material';
 import { VisibilityOff, Visibility } from '@mui/icons-material';
 import { FacebookIcon, GoogleIcon, LogoGreen } from '@/components/icons';
 import styles from '../auth.module.css';
+import signIn from '@/firebase/auth/signIn';
 
 export default function LoginPage() {
 	const [showPassword, setShowPassword] = useState(false);
+	const router = useRouter();
 	const {
 		register,
 		handleSubmit,
 		formState: { errors },
 	} = useForm();
 
-	const onSubmit = (data: any) => console.log(data);
+	const onSubmit = async (data: any) => {
+		const { result, error } = await signIn(data.email, data.password);
+
+		if (error) {
+			return console.log(error);
+		}
+
+		console.log(result);
+		return router.push('/dashboard');
+	};
 
 	return (
 		<div className={styles.authContainer}>
