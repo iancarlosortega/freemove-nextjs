@@ -25,9 +25,26 @@
   }
 }
 
+.authCard header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .authLogo {
   cursor: pointer;
   margin-bottom: 1rem;
+  transform: translateX(-0.5rem);
+}
+
+.authLogo svg {
+  width: 18rem;
+}
+
+@media (min-width: 768px){
+  .authLogo svg {
+    width: initial;
+  }
 }
 
 .authForm {

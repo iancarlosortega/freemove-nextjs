@@ -1,12 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { Button, IconButton, InputAdornment, TextField } from '@mui/material';
 import { VisibilityOff, Visibility } from '@mui/icons-material';
-import { FacebookIcon, GoogleIcon } from '@/components/icons';
+import { FacebookIcon, GoogleIcon, LogoGreen } from '@/components/icons';
 import styles from '../auth.module.css';
 
 export default function LoginPage() {
@@ -24,12 +23,7 @@ export default function LoginPage() {
 			<div className={styles.authCard}>
 				<header>
 					<Link className={styles.authLogo} href='/'>
-						<Image
-							width={200}
-							height={200}
-							src='/assets/logo-v2.png'
-							alt='FreeMove Logo'
-						/>
+						<LogoGreen />
 					</Link>
 					{/* TODO: ALERT COMPONENT */}
 					{/* <div className={styles.alert}alert--error'>

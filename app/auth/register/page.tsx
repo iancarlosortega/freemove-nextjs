@@ -1,10 +1,9 @@
 'use client';
 
-import Image from 'next/image';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { Button, TextField } from '@mui/material';
-
+import { LogoGreen } from '@/components/icons';
 import styles from '../auth.module.css';
 
 export default function RegisterPage() {
@@ -22,12 +21,7 @@ export default function RegisterPage() {
 			<div className={styles.authCard}>
 				<header>
 					<Link className={styles.authLogo} href='/'>
-						<Image
-							width={200}
-							height={200}
-							src='/assets/logo-v2.png'
-							alt='FreeMove Logo'
-						/>
+						<LogoGreen />
 					</Link>
 					{/* <div @fade *ngIf="isError" className={styles.alert}alert--error">
         <p><strong>Error!</strong> El correo ingresado ya está en uso</p>
