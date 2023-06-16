@@ -4,30 +4,45 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
-import { Button, IconButton, InputAdornment, TextField } from '@mui/material';
+import { Alert, Button, IconButton, InputAdornment, Snackbar, TextField } from '@mui/material';
 import { VisibilityOff, Visibility } from '@mui/icons-material';
 import { FacebookIcon, GoogleIcon, LogoGreen } from '@/components/icons';
+import { signIn } from '@/firebase/signIn';
 import styles from '../auth.module.css';
-import signIn from '@/firebase/auth/signIn';
 
 export default function LoginPage() {
+	const [showError, setShowError] = useState(false)
 	const [showPassword, setShowPassword] = useState(false);
 	const router = useRouter();
 	const {
 		register,
 		handleSubmit,
 		formState: { errors },
+		reset
 	} = useForm();
 
 	const onSubmit = async (data: any) => {
 		const { result, error } = await signIn(data.email, data.password);
 
 		if (error) {
+			setShowError(true);
+			reset();
 			return console.log(error);
 		}
 
 		console.log(result);
 		return router.push('/dashboard');
+	};
+
+	const closeSnackBar = (
+		event?: React.SyntheticEvent | Event,
+		reason?: string
+	) => {
+		if (reason === 'clickaway') {
+			return;
+		}
+
+		setShowError(false);
 	};
 
 	return (
@@ -37,12 +52,21 @@ export default function LoginPage() {
 					<Link className={styles.authLogo} href='/'>
 						<LogoGreen />
 					</Link>
-					{/* TODO: ALERT COMPONENT */}
-					{/* <div className={styles.alert}alert--error'>
-						<p>
-							<strong>Error!</strong> El correo o contraseña son incorrectos
-						</p>
-					</div> */}
+					<Snackbar
+						open={showError}
+						autoHideDuration={4000}
+						anchorOrigin={{
+							vertical: 'top',
+							horizontal: 'center',
+						}}
+						onClose={closeSnackBar}>
+						<Alert
+							onClose={closeSnackBar}
+							severity='error'
+							sx={{ textAlign: 'center' }}>
+							¡Correo Electrónico o contraseña incorrectos!
+						</Alert>
+					</Snackbar>
 				</header>
 				<form
 					autoComplete='off'
