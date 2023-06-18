@@ -4,33 +4,49 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
-import { Alert, Button, IconButton, InputAdornment, Snackbar, TextField } from '@mui/material';
+import {
+	Alert,
+	Button,
+	IconButton,
+	InputAdornment,
+	Snackbar,
+	TextField,
+} from '@mui/material';
 import { VisibilityOff, Visibility } from '@mui/icons-material';
 import { FacebookIcon, GoogleIcon, LogoGreen } from '@/components/icons';
-import { signIn } from '@/firebase/signIn';
+import { ProvidersTypes, signIn, signInWithProvider } from '@/firebase/signIn';
 import styles from '../auth.module.css';
 
 export default function LoginPage() {
-	const [showError, setShowError] = useState(false)
+	const [errorMessage, setErrorMessage] = useState<string>('');
 	const [showPassword, setShowPassword] = useState(false);
 	const router = useRouter();
 	const {
 		register,
 		handleSubmit,
 		formState: { errors },
-		reset
+		reset,
 	} = useForm();
 
 	const onSubmit = async (data: any) => {
 		const { result, error } = await signIn(data.email, data.password);
 
 		if (error) {
-			setShowError(true);
-			reset();
-			return console.log(error);
+			setErrorMessage('¡Correo Electrónico o contraseña incorrectos!');
+			return reset();
 		}
 
-		console.log(result);
+		return router.push('/dashboard');
+	};
+
+	const handleProviderSignIn = async (providerType: ProvidersTypes) => {
+		const { result, error } = await signInWithProvider(providerType);
+
+		if (error) {
+			setErrorMessage('Error con el proveedor de autenticación');
+			return reset();
+		}
+
 		return router.push('/dashboard');
 	};
 
@@ -42,7 +58,7 @@ export default function LoginPage() {
 			return;
 		}
 
-		setShowError(false);
+		setErrorMessage('');
 	};
 
 	return (
@@ -53,7 +69,7 @@ export default function LoginPage() {
 						<LogoGreen />
 					</Link>
 					<Snackbar
-						open={showError}
+						open={Boolean(errorMessage)}
 						autoHideDuration={4000}
 						anchorOrigin={{
 							vertical: 'top',
@@ -64,7 +80,7 @@ export default function LoginPage() {
 							onClose={closeSnackBar}
 							severity='error'
 							sx={{ textAlign: 'center' }}>
-							¡Correo Electrónico o contraseña incorrectos!
+							{errorMessage}
 						</Alert>
 					</Snackbar>
 				</header>
@@ -140,11 +156,17 @@ export default function LoginPage() {
 						<hr />
 					</div>
 				</form>
-				<Button fullWidth variant='oauth'>
+				<Button
+					fullWidth
+					variant='oauth'
+					onClick={() => handleProviderSignIn('google')}>
 					<GoogleIcon />
 					Continuar con Google
 				</Button>
-				<Button fullWidth variant='oauth'>
+				<Button
+					fullWidth
+					variant='oauth'
+					onClick={() => handleProviderSignIn('facebook')}>
 					<FacebookIcon />
 					Continuar con Facebook
 				</Button>
