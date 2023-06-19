@@ -30,12 +30,16 @@ export const theme = createTheme({
 				root: {
 					textTransform: 'none',
 					fontWeight: 400,
+					display: 'flex',
+					justifyContent: 'center',
+					alignItems: 'center',
 				},
 			},
 			variants: [
 				{
 					props: { variant: 'primary' },
 					style: {
+						gap: '0.25rem',
 						margin: '1rem 0',
 						backgroundColor: 'var(--yellow)',
 						color: 'var(--white)',
@@ -56,9 +60,6 @@ export const theme = createTheme({
 						backgroundColor: 'var(--white)',
 						color: '#6a6a6a',
 						fontSize: '1rem',
-						display: 'flex',
-						justifyContent: 'center',
-						alignItems: 'center',
 						gap: '0.5rem',
 						border: '1px solid #d0d0d0',
 						borderRadius: '5px',

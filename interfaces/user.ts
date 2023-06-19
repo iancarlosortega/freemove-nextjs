@@ -1,10 +1,10 @@
-import { DocumentReference, Timestamp } from 'firebase/firestore';
+import { DocumentReference } from 'firebase/firestore';
 
 export interface IUser {
 	id: string;
 	name: string;
 	email: string;
-	createdAt: Timestamp;
+	createdAt: Date;
 	role: UsersRoles;
 	provider: UsersProviders;
 }

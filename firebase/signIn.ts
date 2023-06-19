@@ -1,6 +1,7 @@
 import {
 	FacebookAuthProvider,
 	GoogleAuthProvider,
+	getAdditionalUserInfo,
 	getAuth,
 	signInWithEmailAndPassword,
 	signInWithPopup,
@@ -24,7 +25,7 @@ export async function signIn(email: string, password: string) {
 export type ProvidersTypes = 'google' | 'facebook';
 
 export async function signInWithProvider(providerType: ProvidersTypes) {
-	let result;
+	let result: any = null;
 	let error;
 	let provider;
 	try {
@@ -40,6 +41,8 @@ export async function signInWithProvider(providerType: ProvidersTypes) {
 				break;
 		}
 		result = await signInWithPopup(auth, provider);
+		const details = getAdditionalUserInfo(result!);
+		result = { ...result, additionalUserInfo: details };
 	} catch (e) {
 		error = e;
 	}
