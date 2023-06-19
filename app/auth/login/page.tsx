@@ -13,9 +13,16 @@ import {
 	TextField,
 } from '@mui/material';
 import { VisibilityOff, Visibility } from '@mui/icons-material';
+
+import { ProvidersTypes, signIn, signInWithProvider } from '@/firebase';
 import { FacebookIcon, GoogleIcon, LogoGreen } from '@/components/icons';
-import { ProvidersTypes, signIn, signInWithProvider } from '@/firebase/signIn';
+
 import styles from '../auth.module.css';
+
+interface IFormValues {
+	email: string;
+	password: string;
+}
 
 export default function LoginPage() {
 	const [errorMessage, setErrorMessage] = useState<string>('');
@@ -26,9 +33,9 @@ export default function LoginPage() {
 		handleSubmit,
 		formState: { errors },
 		reset,
-	} = useForm();
+	} = useForm<IFormValues>();
 
-	const onSubmit = async (data: any) => {
+	const onSubmit = async (data: IFormValues) => {
 		const { result, error } = await signIn(data.email, data.password);
 
 		if (error) {
@@ -46,6 +53,34 @@ export default function LoginPage() {
 			setErrorMessage('Error con el proveedor de autenticación');
 			return reset();
 		}
+
+		console.log('result', result);
+		return;
+		// if (result.additionalUserInfo?.isNewUser === true) {
+		// 	const user: User = {
+		// 		idUser: result.user?.uid!,
+		// 		name: result.user?.displayName!,
+		// 		email: result.user?.email!,
+		// 		photoUrl: result.user?.photoURL || null!,
+		// 		provider: result.additionalUserInfo?.providerId! as UserProvider,
+		// 		role: UsersRoles.CLIENT,
+		// 		createdAt: Timestamp.now(),
+		// 		followers: [],
+		// 		following: [],
+		// 		bannerUrl: null!,
+		// 	};
+
+		// 	createDocument('users', user)
+		// 		.then(res => {
+		// 			router.push('/auth/new-user');
+		// 		})
+		// 		.catch(err => {
+		// 			console.log('Error agregar usuario', err);
+		// 		});
+		// } else {
+		// 	const { redirect } = window.history.state;
+		// 	router.push(redirect || '/dashboard');
+		// }
 
 		return router.push('/dashboard');
 	};

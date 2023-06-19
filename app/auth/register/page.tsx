@@ -1,20 +1,82 @@
 'use client';
 
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { Timestamp } from 'firebase/firestore';
 import { useForm } from 'react-hook-form';
-import { Button, TextField } from '@mui/material';
+import {
+	Alert,
+	Button,
+	IconButton,
+	InputAdornment,
+	Snackbar,
+	TextField,
+} from '@mui/material';
+
+import { createDocument, signUp } from '@/firebase';
 import { LogoGreen } from '@/components/icons';
+import { IUser, UsersProviders, UsersRoles } from '@/interfaces';
+
 import styles from '../auth.module.css';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
+
+interface IFormValues {
+	name: string;
+	email: string;
+	password: string;
+	confirmPassword: string;
+}
 
 export default function RegisterPage() {
+	const [errorMessage, setErrorMessage] = useState<string>('');
+	const [showPassword, setShowPassword] = useState(false);
+	const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+	const router = useRouter();
 	const {
 		register,
 		handleSubmit,
 		getValues,
+		reset,
 		formState: { errors },
-	} = useForm();
+	} = useForm<IFormValues>();
 
-	const onSubmit = (data: any) => console.log(data);
+	const onSubmit = async (data: IFormValues) => {
+		const { result, error } = await signUp(data.email, data.password);
+
+		if (error) {
+			setErrorMessage('Error al registrar el usuario');
+			return reset();
+		}
+
+		const user: IUser = {
+			id: result!.user.uid,
+			email: data.email,
+			name: data.name,
+			role: UsersRoles.CLIENT,
+			provider: UsersProviders.EMAIL,
+			createdAt: Timestamp.now(),
+		};
+
+		try {
+			await createDocument('users', user);
+			return router.push('/nuevo-usuario');
+		} catch (error) {
+			setErrorMessage('Error al crear el usuario');
+			return reset();
+		}
+	};
+
+	const closeSnackBar = (
+		event?: React.SyntheticEvent | Event,
+		reason?: string
+	) => {
+		if (reason === 'clickaway') {
+			return;
+		}
+
+		setErrorMessage('');
+	};
 
 	return (
 		<div className={styles.authContainer}>
@@ -23,9 +85,21 @@ export default function RegisterPage() {
 					<Link className={styles.authLogo} href='/'>
 						<LogoGreen />
 					</Link>
-					{/* <div @fade *ngIf="isError" className={styles.alert}alert--error">
-        <p><strong>Error!</strong> El correo ingresado ya está en uso</p>
-      </div> */}
+					<Snackbar
+						open={Boolean(errorMessage)}
+						autoHideDuration={4000}
+						anchorOrigin={{
+							vertical: 'top',
+							horizontal: 'center',
+						}}
+						onClose={closeSnackBar}>
+						<Alert
+							onClose={closeSnackBar}
+							severity='error'
+							sx={{ textAlign: 'center' }}>
+							{errorMessage}
+						</Alert>
+					</Snackbar>
 				</header>
 				<form
 					autoComplete='off'
@@ -35,7 +109,6 @@ export default function RegisterPage() {
 						error={Boolean(errors['name']?.message)}
 						type='text'
 						label='Nombres y Apellidos'
-						placeholder='Juan Pérez'
 						variant='outlined'
 						helperText={errors.name?.message?.toString()}
 						sx={{
@@ -66,7 +139,7 @@ export default function RegisterPage() {
 
 					<TextField
 						error={Boolean(errors['password']?.message)}
-						type='password'
+						type={showPassword ? 'text' : 'password'}
 						label='Contraseña'
 						placeholder='********'
 						variant='outlined'
@@ -81,11 +154,23 @@ export default function RegisterPage() {
 								message: 'Debe tener mínimo 6 caracteres',
 							},
 						})}
+						InputProps={{
+							endAdornment: (
+								<InputAdornment position='end'>
+									<IconButton
+										aria-label='toggle password visibility'
+										onClick={() => setShowPassword(!showPassword)}
+										edge='end'>
+										{showPassword ? <VisibilityOff /> : <Visibility />}
+									</IconButton>
+								</InputAdornment>
+							),
+						}}
 					/>
 
 					<TextField
 						error={Boolean(errors['confirmPassword']?.message)}
-						type='password'
+						type={showConfirmPassword ? 'text' : 'password'}
 						label='Confirmar Contraseña'
 						placeholder='********'
 						variant='outlined'
@@ -100,10 +185,22 @@ export default function RegisterPage() {
 								message: 'Debe tener mínimo 6 caracteres',
 							},
 							validate: value =>
-								value !== getValues('password')
-									? 'Las contraseñas no coinciden'
-									: '',
+								value === getValues('password')
+									? true
+									: 'Las contraseñas no coinciden',
 						})}
+						InputProps={{
+							endAdornment: (
+								<InputAdornment position='end'>
+									<IconButton
+										aria-label='toggle password visibility'
+										onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+										edge='end'>
+										{showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+									</IconButton>
+								</InputAdornment>
+							),
+						}}
 					/>
 					<Button type='submit' variant='primary'>
 						Registrarse
