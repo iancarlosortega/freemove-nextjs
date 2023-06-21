@@ -1,5 +1,5 @@
-import { getCountries } from '@/helpers';
 import { NewUserForm } from './NewUserForm';
+import { getCountries } from '@/helpers';
 
 export default async function NewUserPage() {
 	const countries = await getCountries();

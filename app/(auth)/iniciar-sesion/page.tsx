@@ -35,6 +35,10 @@ export default function LoginPage() {
 	const [errorMessage, setErrorMessage] = useState<string>('');
 	const [showPassword, setShowPassword] = useState(false);
 	const router = useRouter();
+	if (typeof window !== 'undefined') {
+		// Perform localStorage action
+		const item = localStorage.getItem('key');
+	}
 	const {
 		register,
 		handleSubmit,
@@ -42,9 +46,14 @@ export default function LoginPage() {
 		reset,
 	} = useForm<IFormValues>({
 		defaultValues: {
-			email: localStorage.getItem('email') || '',
+			email:
+				(typeof window !== 'undefined' && localStorage.getItem('email')) || '',
 			password: '',
-			remember: localStorage.getItem('remember') === 'true' ? true : false,
+			remember:
+				typeof window !== 'undefined' &&
+				localStorage.getItem('remember') === 'true'
+					? true
+					: false,
 		},
 	});
 
@@ -64,6 +73,18 @@ export default function LoginPage() {
 			localStorage.removeItem('remember');
 		}
 
+		const { status } = await fetch('/api/login', {
+			method: 'POST',
+			headers: {
+				Authorization: `Bearer ${await result!.user.getIdToken()}`,
+			},
+		});
+
+		if (status !== 200) {
+			setErrorMessage('Error al iniciar sesión');
+			return reset();
+		}
+
 		return router.push('/dashboard');
 	};
 
@@ -73,6 +94,18 @@ export default function LoginPage() {
 		if (error) {
 			setErrorMessage('Error con el proveedor de autenticación');
 			console.log(error);
+			return reset();
+		}
+
+		const { status } = await fetch('/api/login', {
+			method: 'POST',
+			headers: {
+				Authorization: `Bearer ${await result!.user.getIdToken()}`,
+			},
+		});
+
+		if (status !== 200) {
+			setErrorMessage('Error al iniciar sesión');
 			return reset();
 		}
 
