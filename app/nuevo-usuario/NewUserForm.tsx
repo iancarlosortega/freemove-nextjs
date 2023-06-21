@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { Baumans } from 'next/font/google';
 import { useQuery } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { Button, InputAdornment, MenuItem, TextField } from '@mui/material';
@@ -9,6 +10,11 @@ import { Done } from '@mui/icons-material';
 import { getCitiesByCountry } from '@/helpers';
 
 import styles from './new-user.module.css';
+
+const baumans = Baumans({
+	subsets: ['latin'],
+	weight: ['400'],
+});
 
 interface Props {
 	countries: string[];
@@ -35,9 +41,9 @@ export const NewUserForm: React.FC<Props> = ({ countries }) => {
 		formState: { dirtyFields, errors },
 	} = useForm<IFormValues>();
 
-	const { isLoading, error, data, isFetching } = useQuery({
-		queryKey: ['cities', getValues('country') || 'Ecuador'],
-		queryFn: () => getCitiesByCountry(getValues('country') || 'Ecuador'),
+	const { data, isFetching } = useQuery({
+		queryKey: ['cities', getValues('country')],
+		queryFn: () => getCitiesByCountry(getValues('country') as string),
 		initialData: [],
 		enabled: enabled,
 	});
@@ -63,7 +69,7 @@ export const NewUserForm: React.FC<Props> = ({ countries }) => {
 	return (
 		<>
 			<h1 className={styles.title}>
-				Bienvenido a <span>FreeMove</span>
+				Bienvenido a <span className={baumans.className}>FreeMove</span>
 			</h1>
 			<form autoComplete='off' onSubmit={handleSubmit(onSubmit)}>
 				<section className={styles.section}>
