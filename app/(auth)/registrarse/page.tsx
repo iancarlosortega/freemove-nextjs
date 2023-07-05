@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { isAxiosError } from 'axios';
 import { useForm } from 'react-hook-form';
 import {
 	Alert,
@@ -12,16 +13,14 @@ import {
 	Snackbar,
 	TextField,
 } from '@mui/material';
-
-import { createDocument, signUp } from '@/firebase';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { LogoGreen } from '@/components/icons';
-import { IUser, UsersProviders, UsersRoles } from '@/interfaces';
 
 import styles from '../auth.module.css';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { freeMoveApi } from '@/api/freeMoveApi';
 
 interface IFormValues {
-	name: string;
+	fullName: string;
 	email: string;
 	password: string;
 	confirmPassword: string;
@@ -40,29 +39,22 @@ export default function RegisterPage() {
 		formState: { errors },
 	} = useForm<IFormValues>();
 
-	const onSubmit = async (data: IFormValues) => {
-		const { result, error } = await signUp(data.email, data.password);
-
-		if (error) {
-			setErrorMessage('Error al registrar el usuario');
-			return reset();
-		}
-
-		const user: IUser = {
-			id: result!.user.uid,
-			email: data.email,
-			name: data.name,
-			role: UsersRoles.CLIENT,
-			provider: UsersProviders.EMAIL,
-			createdAt: new Date(),
-		};
-
+	const onSubmit = async (formValues: IFormValues) => {
 		try {
-			await createDocument('users', user);
-			return router.push('/nuevo-usuario');
+			const { data } = await freeMoveApi.post('/auth/register', {
+				fullName: formValues.fullName,
+				email: formValues.email,
+				password: formValues.password,
+			});
+			router.push('/nuevo-usuario');
 		} catch (error) {
-			setErrorMessage('Error al crear el usuario');
-			return reset();
+			console.log(error);
+			if (isAxiosError(error)) {
+				setErrorMessage(
+					error.response?.data.message || 'Error al registrar el usuario'
+				);
+				return reset();
+			}
 		}
 	};
 
@@ -104,15 +96,15 @@ export default function RegisterPage() {
 				className={styles.authForm}
 				onSubmit={handleSubmit(onSubmit)}>
 				<TextField
-					error={Boolean(errors['name']?.message)}
+					error={Boolean(errors['fullName']?.message)}
 					type='text'
 					label='Nombres y Apellidos'
 					variant='outlined'
-					helperText={errors.name?.message?.toString()}
+					helperText={errors.fullName?.message?.toString()}
 					sx={{
 						my: 1,
 					}}
-					{...register('name', {
+					{...register('fullName', {
 						required: 'Este campo es requerido',
 					})}
 				/>
@@ -148,8 +140,14 @@ export default function RegisterPage() {
 					{...register('password', {
 						required: 'Este campo es requerido',
 						minLength: {
-							value: 6,
-							message: 'Debe tener mínimo 6 caracteres',
+							value: 8,
+							message: 'Debe tener mínimo 8 caracteres',
+						},
+						pattern: {
+							value:
+								/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+							message:
+								'La contraseña debe tener al menos una letra mayúscula, una minúscula, un número y un carácter especial',
 						},
 					})}
 					InputProps={{
@@ -181,6 +179,12 @@ export default function RegisterPage() {
 						minLength: {
 							value: 6,
 							message: 'Debe tener mínimo 6 caracteres',
+						},
+						pattern: {
+							value:
+								/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+							message:
+								'La contraseña debe tener al menos una letra mayúscula, una minúscula, un número y un carácter especial',
 						},
 						validate: value =>
 							value === getValues('password')

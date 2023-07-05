@@ -1,40 +1,38 @@
-import { DocumentReference } from 'firebase/firestore';
-
 export interface IUser {
-	id: string;
-	name: string;
+	_id: string;
+	fullName: string;
 	email: string;
-	createdAt: Date;
-	role: UsersRoles;
-	provider: UsersProviders;
-}
-
-export interface IUserDb extends IUser {
+	password: string;
+	role: ValidRoles;
+	provider: ValidProviders;
+	isActive: boolean;
 	age?: number;
 	phone?: string;
 	gender?: string;
 	identificationCard?: string;
 	country?: string;
 	city?: string;
-	canton?: string;
 	weight?: number;
 	height?: number;
-	followers?: DocumentReference[];
-	following?: DocumentReference[];
-	likes?: DocumentReference[];
-	photoUrl?: string;
-	photoFilename?: string;
-	bannerUrl?: string;
-	bannerFilename?: string;
+	// TODO: Agregar estos campos
+	// followers?: DocumentReference[];
+	// following?: DocumentReference[];
+	// likes?: DocumentReference[];
+	// photoUrl?: string;
+	// photoFilename?: string;
+	// bannerUrl?: string;
+	// bannerFilename?: string;
+	createdAt: Date;
+	updatedAt: Date;
 }
 
-export enum UsersProviders {
+export enum ValidProviders {
 	EMAIL = 'email-password',
-	GOOGLE = 'google.com',
-	FACEBOOK = 'facebook.com',
+	GOOGLE = 'google',
+	FACEBOOK = 'facebook',
 }
 
-export enum UsersRoles {
-	ADMIN = 'ADMIN-ROLE',
-	CLIENT = 'CLIENT-ROLE',
+export enum ValidRoles {
+	ADMIN = 'ADMIN',
+	USER = 'USER',
 }

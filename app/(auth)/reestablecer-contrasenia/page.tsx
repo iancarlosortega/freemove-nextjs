@@ -7,8 +7,6 @@ import { useForm } from 'react-hook-form';
 import { Alert, Button, Snackbar, TextField } from '@mui/material';
 import { ArrowCircleLeftRounded, EmailRounded } from '@mui/icons-material';
 
-import { resetPassword } from '@/firebase';
-
 import styles from './reset-password.module.css';
 
 interface IFormValues {
@@ -26,13 +24,13 @@ export default function ResetPasswordPage() {
 	} = useForm<IFormValues>();
 
 	const onSubmit = async (data: IFormValues) => {
-		const { result, error } = await resetPassword(data.email);
+		// const { result, error } = await resetPassword(data.email);
 
-		if (error) {
-			console.log(error);
-			setErrorMessage('Usuario no encontrado, pruebe otro email');
-			return reset();
-		}
+		// if (error) {
+		// 	console.log(error);
+		// 	setErrorMessage('Usuario no encontrado, pruebe otro email');
+		// 	return reset();
+		// }
 
 		return router.push('/iniciar-sesion');
 	};

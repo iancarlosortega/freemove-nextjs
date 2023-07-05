@@ -13,15 +13,7 @@ import {
 	TextField,
 } from '@mui/material';
 import { VisibilityOff, Visibility } from '@mui/icons-material';
-
-import {
-	ProvidersTypes,
-	createDocument,
-	signIn,
-	signInWithProvider,
-} from '@/firebase';
 import { FacebookIcon, GoogleIcon, LogoGreen } from '@/components/icons';
-import { IUserDb, UsersRoles } from '@/interfaces';
 
 import styles from '../auth.module.css';
 
@@ -35,10 +27,6 @@ export default function LoginPage() {
 	const [errorMessage, setErrorMessage] = useState<string>('');
 	const [showPassword, setShowPassword] = useState(false);
 	const router = useRouter();
-	if (typeof window !== 'undefined') {
-		// Perform localStorage action
-		const item = localStorage.getItem('key');
-	}
 	const {
 		register,
 		handleSubmit,
@@ -58,12 +46,12 @@ export default function LoginPage() {
 	});
 
 	const onSubmit = async (data: IFormValues) => {
-		const { result, error } = await signIn(data.email, data.password);
+		// const { result, error } = await signIn(data.email, data.password);
 
-		if (error) {
-			setErrorMessage('¡Correo Electrónico o contraseña incorrectos!');
-			return reset();
-		}
+		// if (error) {
+		// 	setErrorMessage('¡Correo Electrónico o contraseña incorrectos!');
+		// 	return reset();
+		// }
 
 		if (data.remember) {
 			localStorage.setItem('email', data.email);
@@ -73,69 +61,62 @@ export default function LoginPage() {
 			localStorage.removeItem('remember');
 		}
 
-		const { status } = await fetch('/api/login', {
-			method: 'POST',
-			headers: {
-				Authorization: `Bearer ${await result!.user.getIdToken()}`,
-			},
-		});
+		// const { status } = await fetch('/api/login', {
+		// 	method: 'POST',
+		// 	headers: {
+		// 		Authorization: `Bearer ${await result!.user.getIdToken()}`,
+		// 	},
+		// });
 
-		if (status !== 200) {
-			setErrorMessage('Error al iniciar sesión');
-			return reset();
-		}
+		// if (status !== 200) {
+		// 	setErrorMessage('Error al iniciar sesión');
+		// 	return reset();
+		// }
 
 		return router.push('/dashboard');
 	};
 
-	const handleProviderSignIn = async (providerType: ProvidersTypes) => {
-		const { result, error } = await signInWithProvider(providerType);
-
-		if (error) {
-			setErrorMessage('Error con el proveedor de autenticación');
-			console.log(error);
-			return reset();
-		}
-
-		const { status } = await fetch('/api/login', {
-			method: 'POST',
-			headers: {
-				Authorization: `Bearer ${await result!.user.getIdToken()}`,
-			},
-		});
-
-		if (status !== 200) {
-			setErrorMessage('Error al iniciar sesión');
-			return reset();
-		}
-
-		if (result && result.additionalUserInfo.isNewUser === true) {
-			const user: IUserDb = {
-				id: result.user?.uid!,
-				name: result.user?.displayName!,
-				email: result.user?.email!,
-				photoUrl: result.user?.photoURL || null!,
-				provider: result.additionalUserInfo?.providerId!,
-				role: UsersRoles.CLIENT,
-				createdAt: new Date(),
-			};
-
-			const { result: createResult, error: createError } = await createDocument(
-				'users',
-				user
-			);
-
-			if (createError) {
-				setErrorMessage('Error al crear el usuario');
-				console.log(createError);
-				return reset();
-			}
-
-			return router.push('/nuevo-usuario');
-		} else {
-			const { redirect } = window.history.state;
-			router.push(redirect || '/dashboard');
-		}
+	const handleProviderSignIn = async (providerType: any) => {
+		// const { result, error } = await signInWithProvider(providerType);
+		// if (error) {
+		// 	setErrorMessage('Error con el proveedor de autenticación');
+		// 	console.log(error);
+		// 	return reset();
+		// }
+		// const { status } = await fetch('/api/login', {
+		// 	method: 'POST',
+		// 	headers: {
+		// 		Authorization: `Bearer ${await result!.user.getIdToken()}`,
+		// 	},
+		// });
+		// if (status !== 200) {
+		// 	setErrorMessage('Error al iniciar sesión');
+		// 	return reset();
+		// }
+		// if (result && result.additionalUserInfo.isNewUser === true) {
+		// 	const user: IUserDb = {
+		// 		id: result.user?.uid!,
+		// 		name: result.user?.displayName!,
+		// 		email: result.user?.email!,
+		// 		photoUrl: result.user?.photoURL || null!,
+		// 		provider: result.additionalUserInfo?.providerId!,
+		// 		role: UsersRoles.CLIENT,
+		// 		createdAt: new Date(),
+		// 	};
+		// 	const { result: createResult, error: createError } = await createDocument(
+		// 		'users',
+		// 		user
+		// 	);
+		// 	if (createError) {
+		// 		setErrorMessage('Error al crear el usuario');
+		// 		console.log(createError);
+		// 		return reset();
+		// 	}
+		// 	return router.push('/nuevo-usuario');
+		// } else {
+		// 	const { redirect } = window.history.state;
+		// 	router.push(redirect || '/dashboard');
+		// }
 	};
 
 	const closeSnackBar = (

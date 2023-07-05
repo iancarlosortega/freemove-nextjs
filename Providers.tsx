@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { SessionProvider } from 'next-auth/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { CssBaseline } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
@@ -24,13 +23,11 @@ export const Providers: React.FC<Props> = ({ children }) => {
 	);
 
 	return (
-		<SessionProvider>
-			<QueryClientProvider client={queryClient}>
-				<ThemeProvider theme={theme}>
-					<CssBaseline />
-					{children}
-				</ThemeProvider>
-			</QueryClientProvider>
-		</SessionProvider>
+		<QueryClientProvider client={queryClient}>
+			<ThemeProvider theme={theme}>
+				<CssBaseline />
+				{children}
+			</ThemeProvider>
+		</QueryClientProvider>
 	);
 };
