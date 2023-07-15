@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { Baumans } from 'next/font/google';
 import { useQuery } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
@@ -9,6 +9,7 @@ import { Done } from '@mui/icons-material';
 
 import { getCitiesByCountry } from '@/helpers';
 
+import { AuthContext } from '@/context/auth';
 import styles from './new-user.module.css';
 
 const baumans = Baumans({
@@ -32,6 +33,8 @@ interface IFormValues {
 }
 
 export const NewUserForm: React.FC<Props> = ({ countries }) => {
+	const { user } = useContext(AuthContext);
+
 	const [enabled, setEnabled] = useState(false);
 	const {
 		register,

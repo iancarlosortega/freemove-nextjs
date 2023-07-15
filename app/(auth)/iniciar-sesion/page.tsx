@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
@@ -14,7 +14,7 @@ import {
 } from '@mui/material';
 import { VisibilityOff, Visibility } from '@mui/icons-material';
 import { FacebookIcon, GoogleIcon, LogoGreen } from '@/components/icons';
-
+import { AuthContext } from '@/context/auth';
 import styles from '../auth.module.css';
 
 interface IFormValues {
@@ -24,14 +24,17 @@ interface IFormValues {
 }
 
 export default function LoginPage() {
+	const { loginUser } = useContext(AuthContext);
+
 	const [errorMessage, setErrorMessage] = useState<string>('');
 	const [showPassword, setShowPassword] = useState(false);
 	const router = useRouter();
 	const {
 		register,
 		handleSubmit,
+		resetField,
+		setError,
 		formState: { errors },
-		reset,
 	} = useForm<IFormValues>({
 		defaultValues: {
 			email:
@@ -45,35 +48,31 @@ export default function LoginPage() {
 		},
 	});
 
-	const onSubmit = async (data: IFormValues) => {
-		// const { result, error } = await signIn(data.email, data.password);
+	const onSubmit = async (formValues: IFormValues) => {
+		setErrorMessage('');
 
-		// if (error) {
-		// 	setErrorMessage('¡Correo Electrónico o contraseña incorrectos!');
-		// 	return reset();
-		// }
-
-		if (data.remember) {
-			localStorage.setItem('email', data.email);
+		if (formValues.remember) {
+			localStorage.setItem('email', formValues.email);
 			localStorage.setItem('remember', 'true');
 		} else {
 			localStorage.removeItem('email');
 			localStorage.removeItem('remember');
 		}
 
-		// const { status } = await fetch('/api/login', {
-		// 	method: 'POST',
-		// 	headers: {
-		// 		Authorization: `Bearer ${await result!.user.getIdToken()}`,
-		// 	},
-		// });
+		const { email, password } = formValues;
+		const isValidLogin = await loginUser(email, password);
+		if (!isValidLogin) {
+			setErrorMessage('¡Correo Electrónico o contraseña incorrectos!');
+			resetField('password');
+			setError('email', { type: 'custom' });
+			setError('password', { type: 'custom' });
+			setTimeout(() => {
+				setErrorMessage('');
+			}, 3000);
+			return;
+		}
 
-		// if (status !== 200) {
-		// 	setErrorMessage('Error al iniciar sesión');
-		// 	return reset();
-		// }
-
-		return router.push('/dashboard');
+		router.push('/dashboard');
 	};
 
 	const handleProviderSignIn = async (providerType: any) => {
@@ -157,7 +156,7 @@ export default function LoginPage() {
 				className={styles.authForm}
 				onSubmit={handleSubmit(onSubmit)}>
 				<TextField
-					error={Boolean(errors['email']?.message)}
+					error={Boolean(errors['email'])}
 					type='email'
 					label='Correo Electrónico'
 					placeholder='example@gmail.com'
@@ -175,7 +174,7 @@ export default function LoginPage() {
 					})}
 				/>
 				<TextField
-					error={Boolean(errors['password']?.message)}
+					error={Boolean(errors['password'])}
 					type={showPassword ? 'text' : 'password'}
 					label='Contraseña'
 					placeholder='********'

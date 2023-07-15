@@ -1,9 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { isAxiosError } from 'axios';
 import { useForm } from 'react-hook-form';
 import {
 	Alert,
@@ -15,9 +14,8 @@ import {
 } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { LogoGreen } from '@/components/icons';
-
+import { AuthContext } from '@/context/auth';
 import styles from '../auth.module.css';
-import { freeMoveApi } from '@/api/freeMoveApi';
 
 interface IFormValues {
 	fullName: string;
@@ -27,6 +25,8 @@ interface IFormValues {
 }
 
 export default function RegisterPage() {
+	const { registerUser } = useContext(AuthContext);
+
 	const [errorMessage, setErrorMessage] = useState<string>('');
 	const [showPassword, setShowPassword] = useState(false);
 	const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -35,27 +35,23 @@ export default function RegisterPage() {
 		register,
 		handleSubmit,
 		getValues,
-		reset,
+		setError,
 		formState: { errors },
 	} = useForm<IFormValues>();
 
 	const onSubmit = async (formValues: IFormValues) => {
-		try {
-			const { data } = await freeMoveApi.post('/auth/register', {
-				fullName: formValues.fullName,
-				email: formValues.email,
-				password: formValues.password,
-			});
-			router.push('/nuevo-usuario');
-		} catch (error) {
-			console.log(error);
-			if (isAxiosError(error)) {
-				setErrorMessage(
-					error.response?.data.message || 'Error al registrar el usuario'
-				);
-				return reset();
-			}
+		setErrorMessage('');
+		const { email, password, fullName } = formValues;
+		const { hasError, message } = await registerUser(email, password, fullName);
+		if (hasError) {
+			setErrorMessage(message || 'Error al registrar el usuario');
+			setError('email', { type: 'custom' });
+			setTimeout(() => {
+				setErrorMessage('');
+			}, 3000);
+			return;
 		}
+		router.push('/nuevo-usuario');
 	};
 
 	const closeSnackBar = (
@@ -96,7 +92,7 @@ export default function RegisterPage() {
 				className={styles.authForm}
 				onSubmit={handleSubmit(onSubmit)}>
 				<TextField
-					error={Boolean(errors['fullName']?.message)}
+					error={Boolean(errors['fullName'])}
 					type='text'
 					label='Nombres y Apellidos'
 					variant='outlined'
@@ -109,7 +105,7 @@ export default function RegisterPage() {
 					})}
 				/>
 				<TextField
-					error={Boolean(errors['email']?.message)}
+					error={Boolean(errors['email'])}
 					type='email'
 					label='Correo Electrónico'
 					placeholder='example@gmail.com'
@@ -128,7 +124,7 @@ export default function RegisterPage() {
 				/>
 
 				<TextField
-					error={Boolean(errors['password']?.message)}
+					error={Boolean(errors['password'])}
 					type={showPassword ? 'text' : 'password'}
 					label='Contraseña'
 					placeholder='********'
@@ -165,7 +161,7 @@ export default function RegisterPage() {
 				/>
 
 				<TextField
-					error={Boolean(errors['confirmPassword']?.message)}
+					error={Boolean(errors['confirmPassword'])}
 					type={showConfirmPassword ? 'text' : 'password'}
 					label='Confirmar Contraseña'
 					placeholder='********'
