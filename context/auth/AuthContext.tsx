@@ -14,6 +14,10 @@ interface ContextProps {
 		hasError: boolean;
 		message?: string;
 	}>;
+	updateProfile: (
+		userId: string,
+		data: IUser
+	) => Promise<{ hasError: boolean; message?: string }>;
 }
 
 export const AuthContext = createContext({} as ContextProps);

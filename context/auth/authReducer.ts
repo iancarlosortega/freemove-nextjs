@@ -3,7 +3,8 @@ import { AuthState } from './';
 
 type AuthActionType =
 	| { type: '[Auth] - Login'; payload: IUser }
-	| { type: '[Auth] - Logout' };
+	| { type: '[Auth] - Logout' }
+	| { type: '[Auth] - Update Profile'; payload: IUser };
 
 export const authReducer = (
 	state: AuthState,
@@ -22,6 +23,12 @@ export const authReducer = (
 				...state,
 				isLoggedIn: false,
 				user: undefined,
+			};
+
+		case '[Auth] - Update Profile':
+			return {
+				...state,
+				user: action.payload,
 			};
 
 		default:

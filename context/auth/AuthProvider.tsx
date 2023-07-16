@@ -100,8 +100,35 @@ export const AuthProvider: FC<Props> = ({ children }) => {
 		router.refresh();
 	};
 
+	const updateProfile = async (
+		userId: string,
+		user: IUser
+	): Promise<{ hasError: boolean; message?: string }> => {
+		try {
+			const { data } = await freeMoveApi.patch(`/users/${userId}`, user);
+			dispatch({ type: '[Auth] - Update Profile', payload: data });
+			return {
+				hasError: false,
+			};
+		} catch (err) {
+			if (axios.isAxiosError(err)) {
+				return {
+					hasError: true,
+					message:
+						err.response?.data.message || 'No se pudo actualizar el perfil',
+				};
+			}
+
+			return {
+				hasError: true,
+				message: 'No se pudo actualizar el perfil',
+			};
+		}
+	};
+
 	return (
-		<AuthContext.Provider value={{ ...state, loginUser, registerUser, logout }}>
+		<AuthContext.Provider
+			value={{ ...state, loginUser, registerUser, logout, updateProfile }}>
 			{children}
 		</AuthContext.Provider>
 	);
