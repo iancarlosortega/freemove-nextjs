@@ -16,7 +16,7 @@ interface ContextProps {
 	}>;
 	updateProfile: (
 		userId: string,
-		data: IUser
+		data: Partial<IUser>
 	) => Promise<{ hasError: boolean; message?: string }>;
 }
 

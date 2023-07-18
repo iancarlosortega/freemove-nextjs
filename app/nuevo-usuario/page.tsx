@@ -4,13 +4,17 @@ import { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Baumans } from 'next/font/google';
 import { useQuery } from '@tanstack/react-query';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import {
 	Alert,
 	Button,
 	CircularProgress,
+	FormControl,
+	FormHelperText,
 	InputAdornment,
+	InputLabel,
 	MenuItem,
+	Select,
 	Snackbar,
 	TextField,
 } from '@mui/material';
@@ -42,19 +46,42 @@ export default function NewUserPage() {
 	const { updateProfile, user } = useContext(AuthContext);
 
 	const [errorMessage, setErrorMessage] = useState<string>('');
-	const [enabled, setEnabled] = useState(false);
+	const [country, setCountry] = useState(user?.country || '');
 	const router = useRouter();
 	const {
 		register,
 		handleSubmit,
+		control,
 		getValues,
+		setValue,
 		resetField,
 		reset,
 		formState: { dirtyFields, errors },
-	} = useForm<IFormValues>();
+	} = useForm<IFormValues>({
+		defaultValues: {
+			age: user?.age,
+			phone: user?.phone,
+			gender: user?.gender || '',
+			identificationCard: user?.identificationCard,
+			country: user?.country || '',
+			city: user?.city || '',
+			height: user?.height,
+			weight: user?.weight,
+		},
+	});
 
 	useEffect(() => {
-		reset(user);
+		if (user?.country) setCountry(user.country);
+		reset({
+			age: user?.age,
+			phone: user?.phone,
+			gender: user?.gender || '',
+			identificationCard: user?.identificationCard,
+			country: user?.country || '',
+			city: user?.city || '',
+			height: user?.height,
+			weight: user?.weight,
+		});
 	}, [reset, user]);
 
 	const { data: countries, isFetching: isFetchingCountries } = useQuery({
@@ -64,25 +91,26 @@ export default function NewUserPage() {
 	});
 
 	const { data: cities, isFetching: isFetchingCities } = useQuery({
-		queryKey: ['cities', getValues('country')],
-		queryFn: () => getCitiesByCountry(getValues('country') as string),
+		queryKey: ['cities', country],
+		queryFn: () => getCitiesByCountry(country),
 		initialData: [],
-		enabled: enabled,
+		enabled: Boolean(country),
 	});
 
-	const handleChangeInput = async (e: React.ChangeEvent<HTMLInputElement>) => {
-		setEnabled(true);
-		resetField('city');
+	const handleInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+		setCountry(e.target.value);
+		// resetField('city');
+		reset({ city: '' });
 	};
 
 	const onSubmit = async (data: IFormValues) => {
 		let dirtyValues: any = {};
 		Object.keys(dirtyFields).forEach(key => {
 			const value = data[key as keyof IFormValues];
-			if (!value) return;
 			dirtyValues = {
 				...dirtyValues,
 				[key]:
+					value === '' ||
 					key === 'phone' ||
 					key === 'identificationCard' ||
 					isNaN(value as number)
@@ -90,7 +118,6 @@ export default function NewUserPage() {
 						: Number(value),
 			};
 		});
-
 		const { hasError, message } = await updateProfile(user!._id, dirtyValues);
 		if (hasError) {
 			setErrorMessage(message || 'Error al registrar el usuario');
@@ -106,7 +133,6 @@ export default function NewUserPage() {
 		if (reason === 'clickaway') {
 			return;
 		}
-
 		setErrorMessage('');
 	};
 
@@ -166,16 +192,20 @@ export default function NewUserPage() {
 							})}
 						/>
 
-						<TextField
-							select
-							label='Género'
-							helperText={errors.gender?.message?.toString()}
-							value={getValues('gender') || ''}
-							{...register('gender')}>
-							<MenuItem value='Masculino'>Masculino</MenuItem>
-							<MenuItem value='Femenino'>Femenino</MenuItem>
-							<MenuItem value='Otro'>Otro</MenuItem>
-						</TextField>
+						<FormControl>
+							<InputLabel>Género</InputLabel>
+							<Controller
+								name='gender'
+								control={control}
+								render={({ field }) => (
+									<Select {...field} label='Género'>
+										<MenuItem value='Masculino'>Masculino</MenuItem>
+										<MenuItem value='Femenino'>Femenino</MenuItem>
+										<MenuItem value='Otro'>Otro</MenuItem>
+									</Select>
+								)}
+							/>
+						</FormControl>
 
 						<TextField
 							error={Boolean(errors['identificationCard'])}
@@ -190,56 +220,72 @@ export default function NewUserPage() {
 							})}
 						/>
 
-						<TextField
-							select
-							label='País'
-							helperText={errors.country?.message?.toString()}
-							value={getValues('country') || ''}
-							{...register('country', {
-								onChange: handleChangeInput,
-							})}>
-							{countries.map(country => (
-								<MenuItem key={country} value={country}>
-									{country}
-								</MenuItem>
-							))}
-						</TextField>
+						<FormControl>
+							<InputLabel>País</InputLabel>
+							<Controller
+								name='country'
+								control={control}
+								render={({ field }) => (
+									<Select
+										{...field}
+										label='País'
+										onChange={(e: any) => {
+											handleInputChange(e);
+											field.onChange(e);
+										}}>
+										{countries.map(country => (
+											<MenuItem key={country} value={country}>
+												{country}
+											</MenuItem>
+										))}
+									</Select>
+								)}
+							/>
+						</FormControl>
 
-						<TextField
-							disabled={
-								!getValues('country') || isFetchingCities || cities.length === 0
-							}
-							select
-							label='Ciudad'
-							helperText={
-								!getValues('country') ? 'Seleccione primero un país' : ''
-							}
-							value={getValues('city') || ''}
-							SelectProps={{
-								IconComponent: _props => (
-									<div>
-										{isFetchingCities ? (
-											<CircularProgress
-												color='inherit'
-												size={25}
-												sx={{
-													marginTop: '5px',
-													marginRight: '15px',
-												}}
-											/>
-										) : (
-											<ArrowDropDown {..._props} />
-										)}
-									</div>
-								),
-							}}
-							{...register('city')}>
-							{(cities as string[]).map(city => (
-								<MenuItem key={city} value={city}>
-									{city}
-								</MenuItem>
-							))}
-						</TextField>
+						<FormControl>
+							<InputLabel>Ciudad</InputLabel>
+							<Controller
+								name='city'
+								control={control}
+								render={({ field }) => (
+									<Select
+										{...field}
+										label='Ciudad'
+										disabled={
+											!getValues('country') ||
+											isFetchingCities ||
+											cities.length === 0
+										}
+										IconComponent={_props => (
+											<div>
+												{isFetchingCities ? (
+													<CircularProgress
+														color='inherit'
+														size={25}
+														sx={{
+															marginTop: '5px',
+															marginRight: '15px',
+														}}
+													/>
+												) : (
+													<ArrowDropDown {..._props} />
+												)}
+											</div>
+										)}>
+										{cities.length > 0 &&
+											(cities as string[]).map(city => (
+												<MenuItem key={city} value={city}>
+													{city}
+												</MenuItem>
+											))}
+									</Select>
+								)}
+							/>
+							<FormHelperText>
+								{!getValues('country') ? 'Seleccione primero un país' : ''}
+							</FormHelperText>
+						</FormControl>
 					</div>
 				</section>
 
@@ -304,7 +350,7 @@ export default function NewUserPage() {
 					</div>
 				</section>
 				<div className='flex-center'>
-					<Button variant='primary' type='submit'>
+					<Button type='submit'>
 						Continuar
 						<Done />
 					</Button>

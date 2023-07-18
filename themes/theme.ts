@@ -3,8 +3,12 @@ import { createTheme } from '@mui/material/styles';
 
 declare module '@mui/material/Button' {
 	interface ButtonPropsVariantOverrides {
-		primary: true;
 		oauth: true;
+		gradient: true;
+	}
+
+	interface ButtonPropsColorOverrides {
+		successful: true;
 	}
 }
 
@@ -28,46 +32,68 @@ export const theme = createTheme({
 		MuiButton: {
 			styleOverrides: {
 				root: {
+					backgroundColor: 'var(--yellow)',
+					color: 'var(--white)',
+					margin: '1rem 0',
+					padding: '0.5rem 1rem',
+					border: 'none',
+					borderRadius: '5px',
 					textTransform: 'none',
+					fontSize: '1rem',
 					fontWeight: 400,
 					display: 'flex',
 					justifyContent: 'center',
 					alignItems: 'center',
+					gap: '0.25rem',
+					transition: 'background-color 0.2s ease-in-out',
+					':hover': {
+						backgroundColor: 'var(--dark-yellow)',
+					},
 				},
 			},
 			variants: [
 				{
-					props: { variant: 'primary' },
+					props: { variant: 'oauth' },
 					style: {
-						gap: '0.25rem',
-						margin: '1rem 0',
-						backgroundColor: 'var(--yellow)',
-						color: 'var(--white)',
-						border: 'none',
-						borderRadius: '5px',
-						padding: '0.5rem 1rem',
-						fontSize: '1rem',
-						transition: 'background-color 0.2s ease-in-out',
+						backgroundColor: 'var(--white)',
+						color: '#6a6a6a',
+						gap: '0.5rem',
+						border: '1px solid #d0d0d0',
 						':hover': {
-							backgroundColor: 'var(--dark-yellow)',
+							backgroundColor: '#f5f5f5',
 						},
 					},
 				},
 				{
-					props: { variant: 'oauth' },
+					props: { variant: 'gradient' },
 					style: {
-						margin: '1rem 0',
-						backgroundColor: 'var(--white)',
-						color: '#6a6a6a',
-						fontSize: '1rem',
+						backgroundImage:
+							'linear-gradient(to right, var(--dark-yellow) 0%, var(--yellow) 50%, var(--dark-yellow) 100%)',
+						backgroudnSize: '200% auto',
+						boxShadow:
+							'0 4px 6px rgba(50, 50, 93, .11), 0 1px 3px rgba(0, 0, 0, .08)',
+						color: 'var(--white)',
+						fontWeight: 700,
 						gap: '0.5rem',
-						border: '1px solid #d0d0d0',
-						borderRadius: '5px',
-						padding: '0.5rem 1rem',
-						transition: 'background-color 0.2s ease-in-out',
+						fontSize: '0.85rem',
+						width: '100%',
 						':hover': {
-							backgroundColor: '#f5f5f5',
+							backgroundPosition: 'right center',
 						},
+					},
+				},
+				{
+					props: { variant: 'gradient', color: 'successful' },
+					style: {
+						backgroundImage:
+							'linear-gradient(to right, var(--dark-green) 0%, var(--green) 50%, var(--dark-green) 100%)',
+					},
+				},
+				{
+					props: { variant: 'gradient', color: 'error' },
+					style: {
+						backgroundImage:
+							'linear-gradient(to right, var(--dark-red) 0%, var(--red) 50%, var(--dark-red) 100%)',
 					},
 				},
 			],
