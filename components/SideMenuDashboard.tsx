@@ -1,39 +1,165 @@
 'use client';
 
-import { Button } from '@mui/material';
 import Link from 'next/link';
-import { Logo } from './icons';
+import { Button } from '@mui/material';
+import { AddAlert, Logout, Stop } from '@mui/icons-material';
 
+import {
+	BitacoraIcon,
+	CommunityIcon,
+	DashboardIcon,
+	EmailIcon,
+	GalleryIcon,
+	HealthIcon,
+	IncidetsIcon,
+	LinkAccountIcon,
+	Logo,
+	PasswordIcon,
+	RoutesIcon,
+	SettingsIcon,
+	TrackingIcon,
+	UsersIcon,
+} from './icons';
 import styles from './SideMenuDashboard.module.css';
-import { AddAlert, Logout } from '@mui/icons-material';
 
 interface MenuItems {
 	title: string;
+	isAvailable: boolean;
 	subItems: SubItems[];
 }
 
 interface SubItems {
 	name: string;
 	route: string;
-	icon: string;
+	icon: JSX.Element;
+	isAvailable: boolean;
 }
 
-const menuItems: MenuItems[] = [];
+const menuItems: MenuItems[] = [
+	{
+		title: '',
+		isAvailable: true,
+		subItems: [
+			{
+				name: 'Dashboard',
+				icon: <DashboardIcon />,
+				route: '/dashboard',
+				isAvailable: true,
+			},
+			{
+				name: 'Rutas',
+				icon: <RoutesIcon />,
+				route: './rutas',
+				isAvailable: true,
+			},
+			{
+				name: 'Galería',
+				icon: <GalleryIcon />,
+				route: './galeria',
+				isAvailable: true,
+			},
+			{
+				name: 'Salud',
+				icon: <HealthIcon />,
+				route: './salud',
+				isAvailable: true,
+			},
+			{
+				name: 'Bitácora',
+				icon: <BitacoraIcon />,
+				route: './bitacora',
+				isAvailable: true,
+			},
+			{
+				name: 'Incidentes',
+				icon: <IncidetsIcon />,
+				route: './incidentes',
+				isAvailable: true,
+			},
+			{
+				name: 'Comunidad',
+				icon: <CommunityIcon />,
+				route: './comunidad',
+				isAvailable: true,
+			},
+			{
+				name: 'Rastreo',
+				icon: <TrackingIcon />,
+				route: './rastreo',
+				isAvailable: true,
+			},
+		],
+	},
+	{
+		title: 'Administración',
+		isAvailable: true,
+		subItems: [
+			{
+				name: 'Usuarios',
+				icon: <UsersIcon />,
+				route: './admin/usuarios',
+				isAvailable: true,
+			},
+			{
+				name: 'Rutas',
+				icon: <RoutesIcon />,
+				route: './admin/rutas',
+				isAvailable: true,
+			},
+			{
+				name: 'Incidentes',
+				icon: <IncidetsIcon />,
+				route: './admin/incidentes',
+				isAvailable: true,
+			},
+		],
+	},
+	{
+		title: 'Configuración',
+		isAvailable: true,
+		subItems: [
+			{
+				name: 'Ajustes',
+				icon: <SettingsIcon />,
+				route: './ajustes',
+				isAvailable: true,
+			},
+			{
+				name: 'Vincular cuenta',
+				icon: <LinkAccountIcon />,
+				route: './vincular-cuenta',
+				isAvailable: true,
+			},
+			{
+				name: 'Email',
+				icon: <EmailIcon />,
+				route: './cambiar-correo',
+				isAvailable: true,
+			},
+			{
+				name: 'Contraseña',
+				icon: <PasswordIcon />,
+				route: './cambiar-clave',
+				isAvailable: true,
+			},
+		],
+	},
+];
 
 export const SideMenuDashboard = () => {
 	return (
-		<aside>
-			<Link href='/'>
+		<aside className={styles.sideMenu}>
+			<Link className={styles.logo} href='/'>
 				<Logo />
 			</Link>
 			{menuItems.map((item, index) => (
 				<div key={index}>
-					<h5>{item.title}</h5>
-					<ul>
+					<h5 className={styles.sectionTitle}>{item.title}</h5>
+					<ul className={styles.listItems}>
 						{item.subItems.map((subItem, index) => (
 							<li key={index}>
 								<Link href={subItem.route}>
-									{/* <Image src={subItem.icon} alt={subItem.name} /> */}
+									{subItem.icon}
 									<p>{subItem.name}</p>
 								</Link>
 							</li>
@@ -42,18 +168,10 @@ export const SideMenuDashboard = () => {
 				</div>
 			))}
 
-			<Button variant='gradient' color='error'>
+			<Button variant='gradient' color={true ? 'error' : 'success'}>
 				{true ? 'Activar Alerta' : 'Pausar Alerta'}
-				<AddAlert />
+				{true ? <AddAlert /> : <Stop />}
 			</Button>
-			{/* <Button
-			*ngIf="alert?.isActive"
-			className="gradient-button desactivate-button"
-			(click)="desactivateAlert()"
-			>
-				Pausar Alerta
-				<mat-icon>stop</mat-icon>
-			</Button> */}
 
 			<Button variant='gradient'>
 				Cerrar sesión

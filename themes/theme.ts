@@ -6,10 +6,6 @@ declare module '@mui/material/Button' {
 		oauth: true;
 		gradient: true;
 	}
-
-	interface ButtonPropsColorOverrides {
-		successful: true;
-	}
 }
 
 const poppins = Poppins({
@@ -83,7 +79,7 @@ export const theme = createTheme({
 					},
 				},
 				{
-					props: { variant: 'gradient', color: 'successful' },
+					props: { variant: 'gradient', color: 'success' },
 					style: {
 						backgroundImage:
 							'linear-gradient(to right, var(--dark-green) 0%, var(--green) 50%, var(--dark-green) 100%)',
