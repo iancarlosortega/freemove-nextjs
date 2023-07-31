@@ -11,8 +11,8 @@ export const UsersIcon = ({ color = '#716C6C' }) => {
 				fill={color}
 			/>
 			<path
-				fill-rule='evenodd'
-				clip-rule='evenodd'
+				fillRule='evenodd'
+				clipRule='evenodd'
 				d='M5.216 11.9999C5.06776 11.6878 4.99382 11.3455 5 10.9999C5 9.64494 5.68 8.24994 6.936 7.27994C6.30909 7.08677 5.65595 6.99231 5 6.99994C1 6.99994 0 9.99994 0 10.9999C0 11.9999 1 11.9999 1 11.9999H5.216Z'
 				fill={color}
 			/>

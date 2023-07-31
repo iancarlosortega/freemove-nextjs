@@ -212,9 +212,7 @@ export default function LoginPage() {
 						¿Olvidaste tu contraseña?
 					</Link>
 				</div>
-				<Button type='submit' variant='primary'>
-					Iniciar Sesión
-				</Button>
+				<Button type='submit'>Iniciar Sesión</Button>
 				<div className={styles.divider}>
 					<hr />
 					<div className={styles.mid}>

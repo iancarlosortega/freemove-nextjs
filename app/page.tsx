@@ -24,6 +24,7 @@ export default function Home() {
 								alt='Slider images'
 								width={1920}
 								height={1080}
+								priority
 							/>
 						))}
 					</div>

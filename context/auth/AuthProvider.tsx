@@ -40,6 +40,7 @@ export const AuthProvider: FC<Props> = ({ children }) => {
 			Cookies.set('token', token);
 			dispatch({ type: '[Auth] - Login', payload: user });
 		} catch (error) {
+			console.log(error);
 			Cookies.remove('token');
 			router.push('/iniciar-sesion');
 		}
@@ -102,7 +103,7 @@ export const AuthProvider: FC<Props> = ({ children }) => {
 
 	const updateProfile = async (
 		userId: string,
-		user: IUser
+		user: Partial<IUser>
 	): Promise<{ hasError: boolean; message?: string }> => {
 		try {
 			const { data } = await freeMoveApi.patch(`/users/${userId}`, user);
